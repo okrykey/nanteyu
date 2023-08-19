@@ -2,7 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { jaJP } from "@clerk/localizations";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./_components/layout/Header";
+import Header from "../components/layout/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
