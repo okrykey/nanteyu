@@ -5,6 +5,7 @@ import {
 } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse, streamToResponse } from "ai";
 import { prisma } from "@/lib/prismaClient";
+import { getUser } from "@/lib/clerk";
 
 const languageMap: Record<string, number> = {
   english: 1,
@@ -21,8 +22,6 @@ const openai = new OpenAIApi(config);
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
 
-// ...
-
 export async function POST(
   req: Request,
   { params }: { params: { language: string } }
@@ -30,6 +29,12 @@ export async function POST(
   // Extract the `messages` from the body of the request
   const { messages } = await req.json();
   const lastMessage = messages[messages.length - 1];
+
+  const user = await getUser();
+  console.log("Fetched user:", user);
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   let translationLanguage = "英語";
   switch (params.language) {
@@ -80,10 +85,9 @@ export async function POST(
     onStart: async () => {
       const newPost = await prisma.post.create({
         data: {
-          userId: "test",
+          userId: user.id,
           languageId: languageMap[params.language],
           question: prompt.content,
-          // 完了していないため、応答を一時的に空にします
           response: "",
         },
       });
@@ -91,12 +95,12 @@ export async function POST(
     },
     onCompletion: async (completion) => {
       await prisma.post.update({
-        where: { id: createdPostId }, // 保存した投稿IDを使用してエントリを特定
+        where: { id: createdPostId },
         data: { response: completion },
       });
     },
   });
-  // Respond with the stream
+  // Respond with the streams
 
   return new StreamingTextResponse(stream);
 }
