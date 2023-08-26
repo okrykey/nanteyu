@@ -37,41 +37,39 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Handle the webhook
   const eventType: EventType = evt.type;
   if (eventType === "user.created") {
-    const { id: uuid, username: username } = evt.data;
-    console.log("user.created: ", uuid);
+    const { id: id, username: username } = evt.data;
+    console.log("user.created: ", id);
 
-    // Create a new user in the database using Prisma
     try {
       const newUser = await prisma.user.create({
         data: {
-          uuid: uuid,
+          id: id,
           username: username,
         },
       });
-      console.log("New User Created: ", newUser);
+
       return new Response("User created successfully", {
-        status: 201, // 201 Created
+        status: 201,
       });
     } catch (error) {
-      console.error("Error creating user: ", error);
+      // console.error("Error creating user: ", error);
       return new Response("Error creating user", {
-        status: 500, // 500 Internal Server Error
+        status: 500,
       });
     }
   } else if (eventType === "user.deleted") {
-    const { id: uuid } = evt.data;
-    console.log("user.deleted: ", uuid);
+    const { id: id } = evt.data;
+    console.log("user.deleted: ", id);
 
     try {
       await prisma.user.delete({
-        where: { uuid: uuid },
+        where: { id: id },
       });
-      console.log("User Deleted: ", uuid);
+      // console.log("User Deleted: ", id);
       return new Response("User deleted successfully", {
-        status: 200, // 200 OK
+        status: 200,
       });
     } catch (error) {
       console.error("Error deleting user: ", error);
@@ -80,28 +78,28 @@ export async function POST(req: NextRequest) {
       });
     }
   } else if (eventType === "user.updated") {
-    const { id: uuid, username: username } = evt.data;
-    console.log("user.updated: ", uuid);
+    const { id: id, username: username } = evt.data;
+    console.log("user.updated: ", id);
 
     try {
       const updatedUser = await prisma.user.update({
-        where: { uuid: uuid },
+        where: { id: id },
         data: { username: username },
       });
-      console.log("User Updated: ", updatedUser);
+      // console.log("User Updated: ", updatedUser);
       return new Response("User updated successfully", {
         status: 200, // 200 OK
       });
     } catch (error) {
       console.error("Error updating user: ", error);
       return new Response("Error updating user", {
-        status: 500, // 500 Internal Server Error
+        status: 500,
       });
     }
   }
 
   return new Response("bad request", {
-    status: 400, // 400 Bad Request
+    status: 400,
   });
 }
 

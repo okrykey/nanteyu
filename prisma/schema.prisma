@@ -5,15 +5,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url  	= env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+
 }
 
 model User {
-  id         String   @id @default(uuid()) @map("id") @unique
-  uuid       String   @unique
+  id         String   @id  @map("id")
   username   String?
   posts      Post[]
 }
@@ -25,7 +26,7 @@ model Language {
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   userId     String   @map("user_id")
   languageId Int      @map("language_id")
   question   String   @map("user_content")
