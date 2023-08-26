@@ -12,28 +12,26 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  uuid     String @unique
-  name     String
-  imageUrl  String
-  chats    Chat[]
+  id         String   @id @default(uuid()) @map("id") @unique
+  uuid       String   @unique
+  username   String?
+  posts      Post[]
 }
 
 model Language {
   id      Int    @id @default(autoincrement())
   name    String @unique
-  chats   Chat[]
+  posts   Post[]
 }
 
-model Chat {
+model Post {
   id         Int      @id @default(autoincrement())
-  userId     Int      @map("user_id")
+  userId     String   @map("user_id")
   languageId Int      @map("language_id")
-  question   String
-  response   String
+  question   String   @map("user_content")
+  response   String   @map("assistant_content")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt     @map("updated_at")
-
   user       User     @relation(fields: [userId], references: [id])
   language   Language @relation(fields: [languageId], references: [id])
 
