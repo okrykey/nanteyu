@@ -39,11 +39,11 @@
 }
 
 .markdown h3 {
-  @apply leading-snug text-lg font-semibold mb-4 mt-6;
+  @apply leading-snug border-b  text-lg font-semibold mb-4 mt-6 pb-1;
 }
 
 .markdown h4 {
-  @apply leading-none text-base font-semibold mb-4 mt-6;
+  @apply leading-none text-lg font-semibold mb-4 mt-4;
 }
 
 .markdown h5 {
