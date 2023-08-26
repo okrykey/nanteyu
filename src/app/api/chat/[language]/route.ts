@@ -13,25 +13,21 @@ const languageMap: Record<string, number> = {
   chinese: 3,
 };
 
-// Create an OpenAI API client (that's edge friendly!)
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 
-// IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
 
 export async function POST(
   req: Request,
   { params }: { params: { language: string } }
 ) {
-  // Extract the `messages` from the body of the request
   const { messages } = await req.json();
   const lastMessage = messages[messages.length - 1];
 
   const user = await getUser();
-  console.log("Fetched user:", user);
   if (!user) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -45,6 +41,8 @@ export async function POST(
       translationLanguage = "中国語";
       break;
   }
+
+  const promptQuestion = `『${lastMessage.content}』は${translationLanguage}でなんていう？`;
 
   const prompt = {
     role: "user" as ChatCompletionRequestMessageRoleEnum,
@@ -70,14 +68,12 @@ export async function POST(
     `,
   };
 
-  // Ask OpenAI for a streaming chat completion given the prompt
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     stream: true,
     temperature: 0,
     messages: [prompt],
   });
-  // Convert the response into a friendly text-stream
 
   let createdPostId: number;
 
@@ -87,7 +83,7 @@ export async function POST(
         data: {
           userId: user.id,
           languageId: languageMap[params.language],
-          question: prompt.content,
+          question: promptQuestion,
           response: "",
         },
       });
@@ -100,7 +96,6 @@ export async function POST(
       });
     },
   });
-  // Respond with the streams
 
   return new StreamingTextResponse(stream);
 }
