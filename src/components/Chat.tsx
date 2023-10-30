@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CopyButton from "@/components/copyButton";
 
 type LanguageCode = "english" | "spanish" | "chinese";
 
@@ -74,17 +75,18 @@ export default function Chat() {
                   でなんていう？
                 </div>
               ) : (
-                <ReactMarkdown
-                  remarkPlugins={[remarkBreaks]}
-                  components={{
-                    p: ({ children }) => (
-                      <p style={{ marginBottom: "1em" }}>{children}</p>
-                    ),
-                  }}
-                  className="markdown"
-                >
-                  {m.content}
-                </ReactMarkdown>
+                <>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkBreaks]}
+                    components={{
+                      p: ({ children }) => <p className="mb-4">{children}</p>,
+                    }}
+                    className="markdown"
+                  >
+                    {m.content}
+                  </ReactMarkdown>
+                  <CopyButton copyText={m.content} />
+                </>
               )}
             </div>
           </div>
