@@ -3,6 +3,14 @@ import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
+type Event = {
+  data: Record<string, any>;
+  object: "event";
+  type: EventType;
+};
+
+type EventType = "user.created" | "user.deleted" | "user.updated";
+
 const prisma = new PrismaClient();
 const webhookSecret: string = process.env.NGROK_WEBHOOK_SECRET || "";
 
@@ -14,9 +22,6 @@ export async function POST(req: NextRequest) {
   const svixIdTimeStamp = headerPayload.get("svix-timestamp");
   const svixSignature = headerPayload.get("svix-signature");
   if (!svixId || !svixIdTimeStamp || !svixSignature) {
-    console.log("svixId", svixId);
-    console.log("svixIdTimeStamp", svixIdTimeStamp);
-    console.log("svixSignature", svixSignature);
     return new Response("Error occurred", {
       status: 400,
     });
@@ -31,7 +36,7 @@ export async function POST(req: NextRequest) {
   try {
     evt = wh.verify(payloadString, svixHeaders) as Event;
   } catch (_) {
-    console.log("error");
+    // console.log("error");
     return new Response("Error occurred", {
       status: 400,
     });
@@ -40,8 +45,7 @@ export async function POST(req: NextRequest) {
   const eventType: EventType = evt.type;
   if (eventType === "user.created") {
     const { id: id, username: username } = evt.data;
-    console.log("user.created: ", id);
-
+    // console.log("user.created: ", id);
     try {
       const newUser = await prisma.user.create({
         data: {
@@ -61,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
   } else if (eventType === "user.deleted") {
     const { id: id } = evt.data;
-    console.log("user.deleted: ", id);
+    // console.log("user.deleted: ", id);
 
     try {
       await prisma.user.delete({
@@ -79,7 +83,7 @@ export async function POST(req: NextRequest) {
     }
   } else if (eventType === "user.updated") {
     const { id: id, username: username } = evt.data;
-    console.log("user.updated: ", id);
+    // console.log("user.updated: ", id);
 
     try {
       const updatedUser = await prisma.user.update({
@@ -102,11 +106,3 @@ export async function POST(req: NextRequest) {
     status: 400,
   });
 }
-
-type Event = {
-  data: Record<string, any>;
-  object: "event";
-  type: EventType;
-};
-
-type EventType = "user.created" | "user.deleted" | "user.updated";

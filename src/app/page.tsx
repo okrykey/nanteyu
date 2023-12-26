@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { getUser } from "@/lib/clerk";
 import { Suspense } from "react";
 import Loading from "./Loading";
-import Chat from "@/components/Chat";
-import { getUser } from "@/lib/clerk";
-import Languages from "@/components/Languages";
-import Examples from "@/components/Examples";
+import Chat from "@/components/chat";
+import Examples from "@/components/examples";
+import Trends from "@/components/trends";
 
 export default async function Home() {
   const user = await getUser();
@@ -31,8 +31,7 @@ export default async function Home() {
       <Chat />
       <div className="my-4">
         <Suspense fallback={<Loading />}>
-          {/* @ts-expect-error Server Component */}
-          <Languages />
+          <Trends />
         </Suspense>
         <Examples></Examples>
       </div>
