@@ -75,7 +75,7 @@ export async function POST(
     messages: [prompt],
   });
 
-  let createdPostId: number;
+  let createdPostId: string;
 
   const stream = OpenAIStream(response, {
     onStart: async () => {
