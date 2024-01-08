@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { getUser } from "@/lib/clerk";
 import { Suspense } from "react";
-import Loading from "./Loading";
+import { getUser } from "@/lib/clerk";
 import Chat from "@/components/chat";
 import Examples from "@/components/examples";
 import Trends from "@/components/trends";
+import Loading from "./loading";
 
 export default async function Home() {
   const user = await getUser();
