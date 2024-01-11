@@ -1,9 +1,11 @@
 import { UserProfile } from "@clerk/nextjs";
 
-export default async function Account() {
+const Account = async () => {
   return (
     <div>
       <UserProfile />
     </div>
   );
-}
+};
+
+export default Account;

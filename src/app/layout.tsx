@@ -3,19 +3,16 @@ import { jaJP } from "@clerk/localizations";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "../components/layout/Header";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Nanteyu",
   description: "multi translation App",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ClerkProvider localization={jaJP}>
       <html lang="ja">
@@ -28,4 +25,6 @@ export default function RootLayout({
       </html>
     </ClerkProvider>
   );
-}
+};
+
+export default RootLayout;

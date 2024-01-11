@@ -1,5 +1,7 @@
 import { LoadingUI } from "@/components/ui/loadingui";
 
-export default function Loading() {
+const Loading = () => {
   return <LoadingUI />;
-}
+};
+
+export default Loading;

@@ -5,8 +5,9 @@ import Chat from "@/components/chat";
 import Examples from "@/components/examples";
 import Trends from "@/components/trends";
 import Loading from "./loading";
+import { NextPage } from "next";
 
-export default async function Home() {
+export const Home: NextPage = async () => {
   const user = await getUser();
 
   return (
@@ -37,4 +38,6 @@ export default async function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

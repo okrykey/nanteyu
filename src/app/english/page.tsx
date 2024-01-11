@@ -12,7 +12,7 @@ const languageDisplayNames: Record<LanguageCode, string> = {
   chinese: "中国語",
 };
 
-export default function UserIdtoChatEnglish() {
+const UserIdtoChatEnglish = () => {
   const [selectedLanguage] = useState<LanguageCode>("english");
   const { messages } = useChat({
     api: `/api/chat/${selectedLanguage}`,
@@ -45,4 +45,6 @@ export default function UserIdtoChatEnglish() {
       ))}
     </div>
   );
-}
+};
+
+export default UserIdtoChatEnglish;
