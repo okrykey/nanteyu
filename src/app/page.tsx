@@ -7,7 +7,7 @@ import Trends from "@/components/trends";
 import Loading from "./loading";
 import { NextPage } from "next";
 
-export const Home: NextPage = async () => {
+const Home: NextPage = async () => {
   const user = await getUser();
 
   return (
