@@ -24,7 +24,7 @@ const languageDisplayNames: Record<LanguageCode, string> = {
   chinese: "中国語",
 };
 
-export default function Chat() {
+const Chat = () => {
   const [selectedLanguage, setSelectedLanguage] =
     useState<LanguageCode>("english");
 
@@ -94,4 +94,6 @@ export default function Chat() {
       </div>
     </div>
   );
-}
+};
+
+export default Chat;

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prismaClient";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TrendList from "./trendList";
 
-export default async function Trends() {
+const Trends = async () => {
   const languages = await prisma.language.findMany();
   if (!languages || languages.length === 0)
     return <div className="my-14">sorry...</div>;
@@ -23,4 +23,6 @@ export default async function Trends() {
       </Tabs>
     </>
   );
-}
+};
+
+export default Trends;
